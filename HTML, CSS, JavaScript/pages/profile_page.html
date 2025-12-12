@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/profile_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+
+    <nav class="header-bar">
+        <div class="header-bar_container">
+             <!--  <a href="/" class="header-bar_item">About</a>
+               <a href="/" class="header-bar_item">Contacts</a>
+               <a href="/" class="header-bar_item">Business</a>
+               <a href="/" class="header-bar_item">Personal</a> -->
+               <div class="logout_container">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <a href="/HTML, CSS, JavaScript/pages/login_page.html" class="logout_text">Log Out</a>
+               </div>
+       </div>
+   </nav>
+
+    <header class="site_header">
+        <div class="logo">Books2Digital</div>
+    </header>
+
+    <div class="order_history_container">
+        <div class="order_history_title">
+            <h1>Order History</h1>
+            <hr>
+        </div>
+        
+        <div class="order_history">
+            <div class="order_list_container">
+            </div>
+        </div>
+    </div>
+
+    <main class="profile-container">
+        <div class="profile-card">
+            <div class="avatar" id="avatar">
+                <span id="avatarInitials"></span>
+            </div>
+            <h1 id="welcome">Welcome!</h1>
+            
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                
+                <button type="submit" id="updateBtn">Update Profile</button>
+                <div id="updateMessage"></div>
+            </form>
+        </div>
+    </main>
+
+    <div class="user_navigation">
+        <h2>Profile</h2>
+        <h2>Request a Scan</h2>
+        <h2>Offers</h2>
+    </div>
+
+    <script>
+        // Load Profile Data
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/user', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    window.location.href = '/HTML,%20CSS,%20JavaScript/pages/login_page.html';
+                    return;
+                }
+                
+                const user = await response.json();
+                
+                // Display user data
+                document.getElementById('welcome').textContent = `Welcome, ${user.firstName}!`;
+                document.getElementById('firstName').value = user.firstName;
+                document.getElementById('lastName').value = user.lastName;
+                document.getElementById('email').value = user.email;
+                document.getElementById('phone').value = user.phone || '';
+                
+                // Set avatar initials
+                const initials = (user.firstName.charAt(0) + (user.lastName.charAt(0));
+                document.getElementById('avatarInitials').textContent = initials;
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                window.location.href = '/HTML,%20CSS,%20JavaScript/pages/login_page.html';
+            }
+        }
+
+        // Update Profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const updateBtn = document.getElementById('updateBtn');
+            updateBtn.disabled = true;
+            updateBtn.textContent = 'Updating...';
+            
+            try {
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    phone: document.getElementById('phone').value,
+                };
+                
+                const response = await fetch('/api/user', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('updateMessage').textContent = 'Profile updated successfully!';
+                    document.getElementById('updateMessage').style.color = 'green';
+                    
+                    // Update welcome message and avatar if name changed
+                    document.getElementById('welcome').textContent = `Welcome, ${formData.firstName}!`;
+                    const initials = (formData.firstName.charAt(0) + formData.firstName.charAt(0)).toUpperCase();
+                    document.getElementById('avatarInitials').textContent = initials;
+
+                } else {
+                    document.getElementById('updateMessage').textContent = result.error || 'Update failed';
+                    document.getElementById('updateMessage').style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                document.getElementById('updateMessage').textContent = 'Failed to update profile';
+                document.getElementById('updateMessage').style.color = 'red';
+            } finally {
+                updateBtn.disabled = false;
+                updateBtn.textContent = 'Update Profile';
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/HTML,%20CSS,%20JavaScript/pages/login_page.html';
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
+        // Initial load
+        loadProfile();
+    </script>
+</body>
+</html>

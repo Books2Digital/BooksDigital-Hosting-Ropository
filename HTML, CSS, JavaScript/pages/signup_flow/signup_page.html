@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/login_page.css">
+    <style>
+        .signup_container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 550px;
+            margin: 2rem auto;
+        }
+
+        .signup_title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup_title h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .signup_title hr {
+            width: 60px;
+            height: 3px;
+            background-color: #3498db;
+            border: none;
+            margin: 0 auto;
+        }
+
+        .signup_input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .signup_input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .address-section {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .address-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .address-section h3:before {
+            content: "📍";
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .optional {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+            font-weight: normal;
+        }
+
+        .password-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #7f8c8d;
+        }
+
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .error {
+            color: #e74c3c;
+            background-color: #fadbd8;
+        }
+
+        .success {
+            color: #27ae60;
+            background-color: #d5f4e6;
+        }
+
+        .info {
+            color: #2980b9;
+            background-color: #d6eaf8;
+        }
+
+        .timer {
+            text-align: center;
+            margin: 1rem 0;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .verification-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .province-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .province-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .signup_container {
+                padding: 1.5rem;
+                max-width: 100%;
+            }
+
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .address-section {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup_container {
+                padding: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item">Home</a>
+                <a href="/" class="navigation-bar_item">Browse</a>
+                <a href="/" class="navigation-bar_item">Contact</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="signup_container">
+            <form id="signupForm">
+                <div class="signup_title">
+                    <h2>Create Account</h2>
+                    <hr>
+                </div>
+                
+                <!-- Verification Section (Initially Hidden) -->
+                <div id="verificationSection" style="display: none;">
+                    <div class="verification-note">
+                        <strong>📧 Check Your Email!</strong><br>
+                        We've sent a 6-digit verification code to your email address.
+                        Please enter it below to verify your account.
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="verificationCode" class="form-label required">Verification Code</label>
+                        <input class="signup_input" type="text" id="verificationCode" name="verificationCode" 
+                               placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}"
+                               style="text-align: center; letter-spacing: 8px; font-size: 1.2rem;">
+                        <p class="password-hint">Enter the 6-digit code sent to your email. Code expires in 10 minutes.</p>
+                    </div>
+                    
+                    <div class="timer" id="verificationTimer"></div>
+                    
+                    <button type="button" id="resendCodeBtn" 
+                            style="width: 100%; padding: 0.8rem; background-color: #95a5a6; color: white; border: none; border-radius: 5px; margin-top: 0.5rem;">
+                        Resend Code
+                    </button>
+                    
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 2px solid #ecf0f1;">
+                </div>
+                
+                <!-- Registration Fields -->
+                <div id="registrationFields">
+                    <!-- Personal Information Section -->
+                    <div class="section-title">Personal Information</div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label required">Email Address</label>
+                        <input class="signup_input" type="email" id="email" name="email" 
+                               placeholder="your.email@example.com" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password" class="form-label required">Password</label>
+                            <input class="signup_input" type="password" id="password" name="password" 
+                                   placeholder="Create a password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label required">Confirm Password</label>
+                            <input class="signup_input" type="password" id="confirmPassword" name="confirmPassword" 
+                                   placeholder="Re-enter password" required>
+                        </div>
+                    </div>
+                    
+                    <p class="password-hint">Use at least 8 characters with a mix of letters, numbers, and special characters</p>
+
+                    <div class="form-group">
+                        <label for="preferredName" class="form-label">Preferred Name</label>
+                        <input class="signup_input" type="text" id="preferredName" name="preferredName" 
+                               placeholder="What should we call you? (Optional)">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName" class="form-label required">First Name</label>
+                            <input class="signup_input" type="text" id="firstName" name="firstName" 
+                                   placeholder="First name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="form-label required">Last Name</label>
+                            <input class="signup_input" type="text" id="lastName" name="lastName" 
+                                   placeholder="Last name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob" class="form-label required">Date of Birth</label>
+                        <input class="signup_input" type="date" id="dob" name="dob" required>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="section-title">Address Information</div>
+                    
+                    <div class="address-section">
+                        <h3>Shipping Address</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="unitNumber" class="form-label optional">Unit/Apt Number</label>
+                                <input class="signup_input" type="text" id="unitNumber" name="unitNumber" 
+                                       placeholder="Apt 123, Unit 4B (Optional)">
+                            </div>
+                            <div class="form-group">
+                                <label for="street" class="form-label required">Street Address</label>
+                                <input class="signup_input" type="text" id="street" name="street" 
+                                       placeholder="123 Main Street" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city" class="form-label required">City</label>
+                                <input class="signup_input" type="text" id="city" name="city" 
+                                       placeholder="City" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="province" class="form-label required">Province/Territory</label>
+                                <select class="province-select" id="province" name="province" required>
+                                    <option value="" disabled selected>Select a province</option>
+                                    <option value="AB">Alberta</option>
+                                    <option value="BC">British Columbia</option>
+                                    <option value="MB">Manitoba</option>
+                                    <option value="NB">New Brunswick</option>
+                                    <option value="NL">Newfoundland and Labrador</option>
+                                    <option value="NT">Northwest Territories</option>
+                                    <option value="NS">Nova Scotia</option>
+                                    <option value="NU">Nunavut</option>
+                                    <option value="ON">Ontario</option>
+                                    <option value="PE">Prince Edward Island</option>
+                                    <option value="QC">Quebec</option>
+                                    <option value="SK">Saskatchewan</option>
+                                    <option value="YT">Yukon</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="postalCode" class="form-label required">Postal Code</label>
+                            <input class="signup_input" type="text" id="postalCode" name="postalCode" 
+                                   placeholder="A1A 1A1" required
+                                   pattern="[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]"
+                                   title="Please enter a valid Canadian postal code (e.g., A1A 1A1)">
+                            <p class="password-hint">Format: A1A 1A1 (with space)</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information Section -->
+                    <div class="section-title">Contact Information</div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number <span class="optional">(recommended)</span></label>
+                        <input class="signup_input" type="tel" id="phone" name="phone" 
+                               placeholder="(123) 456-7890"
+                               pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+                               title="Please enter a valid phone number: (123) 456-7890">
+                        <p class="password-hint">Used for order updates and delivery notifications</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn">Create Account</button>
+            </form>
+            
+            <div class="login-link">
+                Already have an account? <a href="/HTML, CSS, JavaScript/pages/login_page.html">Log in</a>
+            </div>
+            
+            <div id="signupMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        let verificationTimer;
+        let verificationStartTime;
+        const VERIFICATION_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
+        let tempUserId = null;
+
+        // Initialize date picker max date (13 years ago from today)
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+            document.getElementById('dob').max = minAgeDate.toISOString().split('T')[0];
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const verificationSection = document.getElementById('verificationSection');
+            const registrationFields = document.getElementById('registrationFields');
+            const isVerificationStep = verificationSection.style.display !== 'none';
+
+            if (!isVerificationStep) {
+                await handleRegistration();
+            } else {
+                await handleVerification();
+            }
+        });
+
+        async function handleRegistration() {
+            // Password validation
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match!', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showMessage('Password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            // Age validation
+            const dob = new Date(document.getElementById('dob').value);
+            const today = new Date();
+            const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+            
+            if (dob > minAgeDate) {
+                showMessage('You must be at least 13 years old to register', 'error');
+                return;
+            }
+
+            // Postal code validation
+            const postalCode = document.getElementById('postalCode').value;
+            const postalCodeRegex = /^[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]$/;
+            if (!postalCodeRegex.test(postalCode)) {
+                showMessage('Please enter a valid postal code (e.g., A1A 1A1)', 'error');
+                return;
+            }
+
+            // Phone validation (if provided)
+            const phone = document.getElementById('phone').value;
+            if (phone && !/^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/.test(phone)) {
+                showMessage('Please enter a valid phone number (e.g., (123) 456-7890)', 'error');
+                return;
+            }
+
+            const formData = {
+                email: document.getElementById('email').value,
+                password: password,
+                preferredName: document.getElementById('preferredName').value || null,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                dob: document.getElementById('dob').value,
+                // Address fields
+                unitNumber: document.getElementById('unitNumber').value || null,
+                street: document.getElementById('street').value,
+                city: document.getElementById('city').value,
+                province: document.getElementById('province').value,
+                postalCode: postalCode,
+                phone: phone || null
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending Verification Code...';
+
+            try {
+                const response = await fetch('http://localhost:4242/api/signup/initiate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    tempUserId = result.tempUserId;
+                    
+                    // Show verification section
+                    document.getElementById('verificationSection').style.display = 'block';
+                    document.getElementById('registrationFields').style.display = 'none';
+                    document.getElementById('submitBtn').textContent = 'Verify & Complete Signup';
+                    
+                    // Focus on verification code input
+                    document.getElementById('verificationCode').focus();
+                    
+                    // Start verification timer
+                    startVerificationTimer();
+                    
+                    showMessage('Verification code sent to ' + formData.email + '. Please check your inbox.', 'success');
+                } else {
+                    showMessage(result.error || 'Registration failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('Network error - please try again', 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function handleVerification() {
+            const verificationCode = document.getElementById('verificationCode').value;
+            
+            if (!verificationCode || verificationCode.length !== 6) {
+                showMessage('Please enter a valid 6-digit code', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying...';
+
+            try {
+                const response = await fetch('http://localhost:4242/api/signup/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tempUserId: tempUserId,
+                        verificationCode: verificationCode
+                    }),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    clearInterval(verificationTimer);
+                    showMessage('Email verified successfully! Creating your account...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = result.redirectUrl || '/HTML,%20CSS,%20JavaScript/pages/profile_page.html';
+                    }, 1500);
+                } else {
+                    showMessage(result.error || 'Invalid verification code', 'error');
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                showMessage('Network error - please try again', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Verify & Complete Signup';
+            }
+        }
+
+        function startVerificationTimer() {
+            verificationStartTime = Date.now();
+            
+            verificationTimer = setInterval(() => {
+                const elapsed = Date.now() - verificationStartTime;
+                const remaining = VERIFICATION_TIMEOUT - elapsed;
+                
+                if (remaining <= 0) {
+                    clearInterval(verificationTimer);
+                    document.getElementById('verificationTimer').textContent = '⏰ Code expired!';
+                    showMessage('Verification code has expired. Please restart the signup process.', 'error');
+                    document.getElementById('submitBtn').disabled = true;
+                    document.getElementById('verificationCode').disabled = true;
+                    
+                    cleanupExpiredRegistration();
+                    return;
+                }
+                
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('verificationTimer').innerHTML = 
+                    `⏳ Time remaining: <strong>${minutes}:${seconds.toString().padStart(2, '0')}</strong>`;
+            }, 1000);
+        }
+
+        async function cleanupExpiredRegistration() {
+            if (!tempUserId) return;
+            
+            try {
+                await fetch(`http://localhost:4242/api/signup/cleanup/${tempUserId}`, {
+                    method: 'DELETE'
+                });
+                
+                // Redirect to signup page after 5 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Cleanup error:', error);
+            }
+        }
+
+        // Resend verification code
+        document.getElementById('resendCodeBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Resending...';
+            
+            try {
+                const response = await fetch('http://localhost:4242/api/signup/resend-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tempUserId: tempUserId })
+                });
+                
+                if (response.ok) {
+                    clearInterval(verificationTimer);
+                    startVerificationTimer();
+                    showMessage('New verification code sent!', 'success');
+                } else {
+                    showMessage('Failed to resend code. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Resend error:', error);
+                showMessage('Network error - please try again', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Resend Code';
+            }
+        });
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('signupMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Real-time password confirmation check
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = '#e74c3c';
+                this.style.boxShadow = '0 0 0 2px rgba(231, 76, 60, 0.2)';
+            } else if (confirmPassword) {
+                this.style.borderColor = '#27ae60';
+                this.style.boxShadow = '0 0 0 2px rgba(39, 174, 96, 0.2)';
+            } else {
+                this.style.borderColor = '#ddd';
+                this.style.boxShadow = 'none';
+            }
+        });
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const hint = document.querySelector('.password-hint');
+            
+            if (password.length > 0) {
+                let strength = 'Weak';
+                let color = '#e74c3c';
+                
+                if (password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+                    strength = 'Strong';
+                    color = '#27ae60';
+                } else if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+                    strength = 'Good';
+                    color = '#f39c12';
+                }
+                
+                hint.innerHTML = `Password strength: <strong style="color: ${color}">${strength}</strong>`;
+            }
+        });
+
+        // Auto-format postal code
+        document.getElementById('postalCode').addEventListener('input', function(e) {
+            let value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            if (value.length > 3) {
+                value = value.substring(0, 3) + ' ' + value.substring(3, 6);
+            }
+            
+            this.value = value;
+        });
+
+        // Auto-format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                value = '(' + value.substring(0, 3) + ') ' + value.substring(3, 6) + '-' + value.substring(6, 10);
+            }
+            
+            this.value = value;
+        });
+
+        // Auto-submit when 6 digits are entered
+        document.getElementById('verificationCode').addEventListener('input', function(e) {
+            if (this.value.length === 6) {
+                document.getElementById('submitBtn').click();
+            }
+        });
+
+        // Enter key submits verification code
+        document.getElementById('verificationCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('submitBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>

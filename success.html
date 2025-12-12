@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Confirmation</title>
+</head>
+<body>
+  <h1>Thank you for your order!</h1>
+  <p>Your payment was successful. A confirmation has been sent to your email.</p>
+  <p>Transaction ID: <span id="payment-id"></span></p>
+  
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById('payment-id').textContent = urlParams.get('id');
+  </script>
+</body>
+</html>

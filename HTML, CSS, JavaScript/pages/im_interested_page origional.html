@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lowest Price & The Highest Quality - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/im_interested_page.css"/>
+</head>
+<body>
+
+    <nav class="header-bar">
+        <div class="header-bar_container">
+             <!--  <a href="/" class="header-bar_item">About</a>
+               <a href="/" class="header-bar_item">Contacts</a>
+               <a href="/" class="header-bar_item">Business</a>
+               <a href="/" class="header-bar_item">Personal</a> -->
+       </div>
+   </nav>
+   
+
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="main">
+        <div class="order_details_container">
+            <form id="orderForm" class="orders_form">
+                <h1>Order Details</h1>
+                <div class="Order_subtitle">
+                    <h2>How many pages do you have?</h2>
+                    <hr>
+                </div>
+
+                <input type="hidden" name="access_key" value="0ad67312-7de7-4939-95d0-5027ba0e77a4">
+                
+                <h3 class="page_amount">Books with 0-200 pages</h3>
+                <input type="number" id="option1" placeholder="0" class="order_inputs book_pages">
+
+                <h3 class="page_amount">Books with 200 - 1000 pages</h3>
+                <input type="number" id="option2" placeholder="0" class="order_inputs book_pages">
+
+                <h3 class="page_amount">Books with 1000+ pages</h3>
+                <input type="number" id="option3" placeholder="0" class="order_inputs book_pages">
+
+                <hr>
+                <h2>Total:</h2>
+                <input type="number" readonly id="total_price" placeholder="$0" class="order_inputs book_pages">
+                <input type="hidden" id="hidden_total_price" name="total_price">
+
+                <div class="Order_subtitle">
+                    <h2>Personal details</h2>
+                    <hr>
+                </div>
+                <input type="text" name="name" placeholder="Your Name" class="order_inputs" required>
+                <input type="email" name="email" placeholder="Your Email" class="order_inputs" required>
+                <input type="text" name="phone" placeholder="Phone (Optional)" class="order_inputs">
+
+                <div class="Order_subtitle">
+                    <h2>Document Preferences</h2>
+                    <hr>
+                </div>
+
+
+                <h3>file type(s)</h3>
+                <div class="file_type_container">
+                    <input type="checkbox" name="documtnt_type" value="PDF" id="pdf_box">
+                    <label for="pdf_box">
+                        <div class="icon">
+                            <p>PDF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="PDF/A" id="pdf/a_box">
+                    <label for="pdf/a_box">
+                        <div class="icon">
+                            <p>PDF/A</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="JPEG" id="jpeg_box">
+                    <label for="jpeg_box">
+                        <div class="icon">
+                            <p>JPEG</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="TIFF" id="tiff_box">
+                    <label for="tiff_box">
+                        <div class="icon">
+                            <p>TIFF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="PNM" id="pnm_box">
+                    <label for="pnm_box">
+                        <div class="icon">
+                            <p>PNM</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="Multipage PDF" id="multipdf_box">
+                    <label for="multipdf_box">
+                        <div class="icon">
+                            <p>Multipage PDF</p>
+                        </div>
+                    </label>
+                </div>
+                
+
+
+                <h3>Delivery Method</h3>
+                <select class="dropdown" name="delivery_method">
+                    <option value="Email">Email</option>
+                    <option value="USB">USB</option>
+                    <option value="Both">Both (Email + USB)</option>
+                </select>
+
+
+                <textarea name="order_details" placeholder="Order details (Optional)" class="order_details_message"></textarea>
+
+                <button type="submit" class="next_button">Next</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        <div class="footer-bar">
+        </div>
+    </div>
+
+    <script>
+        // Get all the input elements
+        const option1 = document.getElementById('option1');
+        const option2 = document.getElementById('option2');
+        const option3 = document.getElementById('option3');
+        const totalPrice = document.getElementById('total_price');
+        const hiddenTotalPrice = document.getElementById('hidden_total_price');
+        
+        // Unique multipliers for each option
+        const multiplier1 = 0.25;  // Example: multiply option1 by 2
+        const multiplier2 = 0.30;  // Example: multiply option2 by 3
+        const multiplier3 = 0.40;  // Example: multiply option3 by 5
+        
+        // Function to calculate and update the total
+        function updateTotal() {
+            // Get values from inputs, default to 0 if empty or NaN
+            const val1 = (parseFloat(option1.value) || 0) * multiplier1;
+            const val2 = (parseFloat(option2.value) || 0) * multiplier2;
+            const val3 = (parseFloat(option3.value) || 0) * multiplier3;
+            
+            // Calculate sum
+            const sum = val1 + val2 + val3;
+            
+            // Update total price fields
+            totalPrice.value = sum.toFixed(2);
+            hiddenTotalPrice.value = sum.toFixed(2);
+        }
+        
+        // Add event listeners to all three inputs
+        option1.addEventListener('input', updateTotal);
+        option2.addEventListener('input', updateTotal);
+        option3.addEventListener('input', updateTotal);
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Get the total price
+            const total = totalPrice.value;
+            
+            // Redirect to checkout page with the total price as a URL parameter
+            window.location.href = 'checkout_page.html?total=' + encodeURIComponent(total);
+            
+            // If you also want to submit the form data to your backend:
+            // You can either:
+            // 1. Submit the form via AJAX before redirecting, or
+            // 2. Include all form data in the URL parameters, or
+            // 3. Store the form data in sessionStorage/localStorage
+            
+            // Example of option 3:
+            const formData = new FormData(this);
+            const formObject = {};
+            formData.forEach((value, key) => {
+                formObject[key] = value;
+            });
+            sessionStorage.setItem('orderData', JSON.stringify(formObject));
+        });
+    </script>
+        <h1>Complete Purchase</h1>
+    
+    <div id="order-summary">
+        <h3>Order Total: <span id="display-total">$0.00</span></h3>
+    </div>
+    
+    <button id="pay-button">Pay Now</button>
+
+    <script>
+        // Get price from URL or storage
+        const urlParams = new URLSearchParams(window.location.search);
+        const total = urlParams.get('total') || sessionStorage.getItem('orderTotal');
+        
+        // Display price
+        document.getElementById('display-total').textContent = `$${total}`;
+        
+        // Stripe Payment
+        document.getElementById('pay-button').addEventListener('click', () => {
+            const stripe = Stripe('pk_test_CAu9PJ4aqY2jEnETwtzptK6M00QP8K6a0M'); // Replace with your key
+            
+            window.location = "checkout_page.html?total="+total;
+
+            // stripe.redirectToCheckout({
+            //     lineItems: [{
+            //         priceData: {
+            //             currency: 'usd',
+            //             productData: { name: 'Document Conversion' },
+            //             unit_amount: Math.round(total * 100) // Convert to cents
+            //         },
+            //         quantity: 1
+            //     }],
+            //     mode: 'payment',
+            //     successUrl: `${window.location.origin}/success.html`,
+            //     cancelUrl: `${window.location.origin}/cancel.html`
+            // }).then(result => {
+            //     if (result.error) alert(result.error.message);
+            // });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/checkout_page.css"/>
+    <!-- Load Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+    <nav class="header-bar">
+        <div class="header-bar_container">
+             <!-- Your header content -->
+       </div>
+   </nav>
+   
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="checkout-container">
+            <div class="order_info_container">
+                <h1 class="os_title">Order Summary</h1>
+                
+                <div class="checkout-section">
+                    <h2>Customer Information</h2>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Name:</span>
+                        <span class="checkout-value" id="customer-name"></span>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Email:</span>
+                        <span class="checkout-value" id="customer-email"></span>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Phone:</span>
+                        <span class="checkout-value" id="customer-phone"></span>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2>Document Preferences</h2>
+                    <div class="checkout-row">
+                        <span class="checkout-label">File Type(s):</span>
+                        <div class="file-types-list" id="file-types"></div>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Delivery Method:</span>
+                        <span class="checkout-value" id="delivery-method"></span>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2>Additional Notes</h2>
+                    <p id="order-notes"></p>
+                </div>
+                
+                <div class="total-section">
+                    <div class="checkout-row">
+                        <span class="checkout-label">Total:</span>
+                        <span class="checkout-value" id="order-total"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-container card_info_container">
+                <h1 class="pd_title">Payment Details</h1>
+                
+                <!-- Stripe Payment Form (Multi-Line Layout) -->
+                <form id="payment-form">
+                    <!-- Card Number -->
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <div id="card-number" class="StripeElement"></div>
+                    </div>
+                    
+                    <!-- Expiry & CVC -->
+                    <div class="card-row">
+                        <div class="card-col">
+                            <label for="card-expiry">Expiry Date</label>
+                            <div id="card-expiry" class="StripeElement"></div>
+                        </div>
+                        <div class="card-col">
+                            <label for="card-cvc">CVC</label>
+                            <div id="card-cvc" class="StripeElement"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="card-errors" role="alert"></div>
+                    <button id="submit-button" class="stripe-button">Pay Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-bar">
+        </div>
+    </div>
+
+    <script>
+        // Get order data from sessionStorage
+        const orderData = JSON.parse(sessionStorage.getItem('orderData'));
+        const urlParams = new URLSearchParams(window.location.search);
+        const totalPrice = urlParams.get('total');
+        
+        // Display the data on the page
+        if (orderData) {
+            document.getElementById('customer-name').textContent = orderData.name || 'N/A';
+            document.getElementById('customer-email').textContent = orderData.email || 'N/A';
+            document.getElementById('customer-phone').textContent = orderData.phone || 'N/A';
+            
+            // Display selected file types
+            const fileTypesContainer = document.getElementById('file-types');
+            if (orderData.documtnt_type) {
+                const fileTypes = Array.isArray(orderData.documtnt_type) ? 
+                    orderData.documtnt_type : [orderData.documtnt_type];
+                
+                fileTypes.forEach(type => {
+                    if (type) {
+                        const tag = document.createElement('span');
+                        tag.className = 'file-type-tag';
+                        tag.textContent = type;
+                        fileTypesContainer.appendChild(tag);
+                    }
+                });
+            } else {
+                fileTypesContainer.textContent = 'None selected';
+            }
+            
+            document.getElementById('delivery-method').textContent = orderData.delivery_method || 'Not selected';
+            document.getElementById('order-notes').textContent = orderData.order_details || 'None';
+            document.getElementById('order-total').textContent = totalPrice ? '$' + totalPrice : '$0';
+        } else {
+            document.getElementById('customer-name').textContent = 'No order data found';
+        }
+
+        // Initialize Stripe with your publishable key
+        const stripe = Stripe('pk_test_51RBK5eQPVgtXZQkj1jvvNdHiEw4bYw4uN8eFSt3hBcSXce8FK0VGJLcqo6yZWhcQzLFykjooDRolrpGg4VVq0CUo00HLU8BiLa');
+        const elements = stripe.elements();
+        
+        // Customize Stripe Elements styles
+        const elementStyles = {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+        
+        // Create Stripe card elements
+        const cardNumber = elements.create('cardNumber', {
+            style: elementStyles,
+            placeholder: '4242 4242 4242 4242'
+        });
+        cardNumber.mount('#card-number');
+        
+        const cardExpiry = elements.create('cardExpiry', {
+            style: elementStyles,
+            placeholder: 'MM/YY'
+        });
+        cardExpiry.mount('#card-expiry');
+        
+        const cardCvc = elements.create('cardCvc', {
+            style: elementStyles,
+            placeholder: '123'
+        });
+        cardCvc.mount('#card-cvc');
+        
+        // Handle real-time validation errors
+        cardNumber.addEventListener('change', (event) => {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+        
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            // Disable form submission while processing
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+            
+            // Get the total amount and convert to cents
+            const amount = parseFloat(totalPrice.replace(/[^0-9.-]+/g,"")) * 100;
+            
+            try {
+                // 1. Create PaymentIntent on your server
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: Math.round(amount),
+                        currency: 'cad',
+                        customerEmail: document.getElementById('customer-email').textContent,
+                        orderData: orderData
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const { clientSecret } = await response.json();
+                
+                // 2. Confirm the payment with Stripe
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardNumber,
+                        billing_details: {
+                            name: document.getElementById('customer-name').textContent,
+                            email: document.getElementById('customer-email').textContent,
+                            phone: document.getElementById('customer-phone').textContent
+                        }
+                    }
+                });
+                
+                if (error) {
+                    // Show error to customer
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = error.message;
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Pay Now';
+                    return;
+                }
+                
+                // 3. Payment succeeded - send to success page
+                if (paymentIntent.status === 'succeeded') {
+                    // Optionally send confirmation to your server
+                    await fetch('/payment-success', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            paymentIntentId: paymentIntent.id,
+                            amount: paymentIntent.amount,
+                            orderData: orderData
+                        })
+                    });
+                    
+                    // Redirect to success page
+                    window.location.href = `/success.html?payment_id=${paymentIntent.id}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('card-errors').textContent = error.message || 'An unexpected error occurred. Please try again.';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Pay Now';
+            }
+        });
+    </script>
+</body>
+</html>

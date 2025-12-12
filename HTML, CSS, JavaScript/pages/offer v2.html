@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UltraSound Pro Wireless Headphones | Subscription</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .user-status {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            display: inline-block;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .product-page {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 120px; /* 4 times larger gap */
+            margin-top: 10px;
+        }
+        
+        .product-image {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .main-image {
+            width: 600px;
+            height: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .main-image img:hover {
+            transform: scale(1.03);
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .product-title {
+            font-size: 2.2rem;
+            margin-top: -200px;
+            margin-bottom: 100px;
+            color: #222;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .product-price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #4a6cf7;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        
+        .price-main {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: rgb(0, 47, 135);
+            margin-right: 10px;
+        }
+        
+        .price-period {
+            font-size: 1.5rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .product-description {
+            margin-bottom: 80px;
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .features {
+            margin-bottom: 40px;
+        }
+        
+        .features h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+        
+        .features ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .features li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05rem;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4a6cf7;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .subscription-section {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        
+        .subscription-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #222;
+            font-weight: 600;
+        }
+        
+        .subscription-description {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .subscribe-button {
+            background: rgb(0, 47, 135);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .subscribe-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
+        }
+        
+        .subscribe-button:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 1100px) {
+            .product-page {
+                gap: 60px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .product-page {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .main-image {
+                height: 500px;
+            }
+            
+            .product-title {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                padding: 30px;
+            }
+            
+            .user-status {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .main-image {
+                height: 400px;
+            }
+            
+            .product-title {
+                font-size: 1.9rem;
+            }
+            
+            .product-price {
+                font-size: 2.3rem;
+            }
+            
+            .price-main {
+                font-size: 2.8rem;
+            }
+            
+            .price-period {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .subscribe-button {
+                padding: 18px 30px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-status" id="userStatus">
+            <i class="fas fa-user"></i> Status: Not Logged In
+        </div>
+        <div class="product-page">
+            <div class="product-image">
+                <div class="main-image">
+                    <img src="/HTML, CSS, JavaScript/images/InfinateScan.png">
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">'Books +' Subscription</h1>
+                
+                <div class="product-price">
+                    <div class="price-main">$600</div>
+                    <div class="price-period">per month</div>
+                </div>
+                
+                <div class="product-description">
+                    <p>Stop the difficult process of deciding which books to scan. With Books2Digital you can easily digitize your entire collection. Our 'Books +' subscription will create for you a complete, searchable, and permanent digital archive of each book in your personal library.</p>
+                </div>
+                
+                <div class="subscription-section">                    
+                    <div class="subscribe-section">
+                        <button class="subscribe-button" id="subscribe-button">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i> Redirecting to subscription...
+    </div>
+
+    <script>
+        // User authentication simulation
+        // In a real application, this would check a session or token
+        let isLoggedIn = false; // Change to true to test logged in state
+        
+        // DOM elements
+        const subscribeButton = document.getElementById('subscribe-button');
+        const userStatus = document.getElementById('userStatus');
+        const notification = document.getElementById('notification');
+        
+        // Initialize user status display
+        function updateUserStatus() {
+            if (isLoggedIn) {
+                userStatus.innerHTML = '<i class="fas fa-user-check"></i> Status: Logged In';
+                userStatus.style.backgroundColor = '#e8f5e9';
+                userStatus.style.color = '#2e7d32';
+            } else {
+                userStatus.innerHTML = '<i class="fas fa-user"></i> Status: Not Logged In';
+                userStatus.style.backgroundColor = '#f0f0f0';
+                userStatus.style.color = '#666';
+            }
+        }
+        
+        // Toggle login state for testing (you can remove this in production)
+        function toggleLogin() {
+            isLoggedIn = !isLoggedIn;
+            updateUserStatus();
+            
+            // Show notification
+            notification.innerHTML = isLoggedIn 
+                ? '<i class="fas fa-check-circle"></i> Successfully logged in!' 
+                : '<i class="fas fa-info-circle"></i> Logged out';
+            notification.style.backgroundColor = isLoggedIn ? '#4caf50' : '#666';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Add click listener to user status for testing (remove in production)
+        userStatus.addEventListener('click', toggleLogin);
+        userStatus.title = "Click to toggle login status (for testing)";
+        
+        // Subscribe button functionality
+        subscribeButton.addEventListener('click', function() {
+            if (isLoggedIn) {
+                // User is logged in - redirect to Stripe payment page
+                notification.innerHTML = '<i class="fas fa-credit-card"></i> Redirecting to payment...';
+                notification.style.backgroundColor = '#4a6cf7';
+                notification.classList.add('show');
+                
+                // Simulate redirect to Stripe payment
+                setTimeout(() => {
+                    // In production, use: window.location.href = "Subsc_checkout.html";
+                    console.log("Redirecting to Subsc_checkout.html (Stripe payment)");
+                    // Uncomment the line below for actual redirect
+                    // window.location.href = "Subsc_checkout.html";
+                    
+                    // For demo purposes, just show a message
+                    notification.innerHTML = '<i class="fas fa-external-link-alt"></i> Redirecting to Stripe checkout...';
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        alert("In the live version, this would redirect to Subsc_checkout.html for Stripe payment processing.");
+                    }, 1000);
+                }, 1000);
+                
+            } else {
+                // User is not logged in - redirect to login page
+                notification.innerHTML = '<i class="fas fa-sign-in-alt"></i> Redirecting to login...';
+                notification.style.backgroundColor = '#ff9800';
+                notification.classList.add('show');
+                
+                // Simulate redirect to login page
+                setTimeout(() => {
+                    // In production, use: window.location.href = "login_page.html";
+                    console.log("Redirecting to login_page.html");
+                    // Uncomment the line below for actual redirect
+                    // window.location.href = "login_page.html";
+                    
+                    // For demo purposes, just show a message
+                    notification.innerHTML = '<i class="fas fa-external-link-alt"></i> Redirecting to login page...';
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        alert("In the live version, this would redirect to login_page.html. After login, user would return to this page.");
+                    }, 1000);
+                }, 1000);
+            }
+        });
+        
+        // Initialize
+        updateUserStatus();
+        
+        // For demo: Add a keyboard shortcut to toggle login (Ctrl+L)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                toggleLogin();
+            }
+        });
+    </script>
+</body>
+</html>

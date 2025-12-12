@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut Icon" type="x-icon" href="HTML, CSS, JavaScript/images/SiteTabLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lowest Price & The Highest Quality - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/im_interested_page.css"/>
+</head>
+<body>
+
+    <nav class="header-bar">
+        <div class="header-bar_container">
+             <!--  <a href="/" class="header-bar_item">About</a>
+               <a href="/" class="header-bar_item">Contacts</a>
+               <a href="/" class="header-bar_item">Business</a>
+               <a href="/" class="header-bar_item">Personal</a> -->
+       </div>
+   </nav>
+   
+
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="main">
+        <div class="order_details_container">
+            <form id="orderForm" class="orders_form">
+                <!-- BOOK CALCULATOR SECTION -->
+                <div class="pricing-info">
+                    <h2>Our Pricing Structure</h2>
+                    <div class="pricing-tier">
+                        <h3>Books with 0 - 200 pages</h3>
+                        <p><strong>$0.25 per page</strong> (up to a max of $50 per book)</p>
+                    </div>
+                    <div class="pricing-tier">
+                        <h3>Books with 200 - 1000 pages</h3>
+                        <p><strong>$0.30 per page</strong> (up to a max of $200 per book)</p>
+                    </div>
+                    <div class="pricing-tier">
+                        <h3>Books with 1000+ pages</h3>
+                        <p><strong>$0.40 per page</strong> (up to a max of $600 per book)</p>
+                    </div>
+                </div>
+                <div class="calculator-container">
+                    <div class="calculator-header">
+                        <h2>Enter Your Books</h2>
+                        <button type="button" class="add-book-btn" id="addBookBtn">
+                            <span>+</span> Add Another Book
+                        </button>
+                    </div>
+                    
+                    <table id="booksTable">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Book Title</th>
+                                <th># of Pages</th>
+                                <th>Scanning Method</th>
+                                <th>Cost</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody">
+                            <!-- Rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="summary" id="summarySection">
+                        <h2>Cost Summary</h2>
+                        <div class="summary-row">
+                            <span>Number of Books:</span>
+                            <span id="bookCount">0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total Pages:</span>
+                            <span id="totalPages">0</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total Cost:</span>
+                            <span id="totalCost">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h1>Order Details</h1>
+                <div class="Order_subtitle">
+                    <h2>How many pages do you have?</h2>
+                    <hr>
+                </div>
+
+                <input type="hidden" name="access_key" value="0ad67312-7de7-4939-95d0-5027ba0e77a4">
+                
+                <h3 class="page_amount">Books with 0-200 pages</h3>
+                <input type="number" id="option1" placeholder="0" class="order_inputs book_pages">
+
+                <h3 class="page_amount">Books with 200 - 1000 pages</h3>
+                <input type="number" id="option2" placeholder="0" class="order_inputs book_pages">
+
+                <h3 class="page_amount">Books with 1000+ pages</h3>
+                <input type="number" id="option3" placeholder="0" class="order_inputs book_pages">
+
+                <hr>
+                <h2>Total:</h2>
+                <input type="number" readonly id="total_price" placeholder="$0" class="order_inputs book_pages">
+                <input type="hidden" id="hidden_total_price" name="total_price">
+
+                <div class="Order_subtitle">
+                    <h2>Personal details</h2>
+                    <hr>
+                </div>
+                <input type="text" name="name" placeholder="Your Name" class="order_inputs" required>
+                <input type="email" name="email" placeholder="Your Email" class="order_inputs" required>
+                <input type="text" name="phone" placeholder="Phone (Optional)" class="order_inputs">
+
+                <div class="Order_subtitle">
+                    <h2>Document Preferences</h2>
+                    <hr>
+                </div>
+
+
+                <h3>file type(s)</h3>
+                <div class="file_type_container">
+                    <input type="checkbox" name="documtnt_type" value="PDF" id="pdf_box">
+                    <label for="pdf_box">
+                        <div class="icon">
+                            <p>PDF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="PDF/A" id="pdf/a_box">
+                    <label for="pdf/a_box">
+                        <div class="icon">
+                            <p>PDF/A</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="JPEG" id="jpeg_box">
+                    <label for="jpeg_box">
+                        <div class="icon">
+                            <p>JPEG</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="TIFF" id="tiff_box">
+                    <label for="tiff_box">
+                        <div class="icon">
+                            <p>TIFF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="PNM" id="pnm_box">
+                    <label for="pnm_box">
+                        <div class="icon">
+                            <p>PNM</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="documtnt_type" value="Multipage PDF" id="multipdf_box">
+                    <label for="multipdf_box">
+                        <div class="icon">
+                            <p>Multipage PDF</p>
+                        </div>
+                    </label>
+                </div>
+                
+
+
+                <h3>Delivery Method</h3>
+                <select class="dropdown" name="delivery_method">
+                    <option value="Email">Email</option>
+                    <option value="USB">USB</option>
+                    <option value="Both">Both (Email + USB)</option>
+                </select>
+
+
+                <textarea name="order_details" placeholder="Order details (Optional)" class="order_details_message"></textarea>
+
+                <button type="submit" class="next_button">Next</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        <div class="footer-bar">
+        </div>
+    </div>
+
+    <script>
+        // BOOK CALCULATOR FUNCTIONALITY
+        document.addEventListener('DOMContentLoaded', function() {
+            const booksTableBody = document.getElementById('booksTableBody');
+            const addBookBtn = document.getElementById('addBookBtn');
+            const bookCountElement = document.getElementById('bookCount');
+            const totalPagesElement = document.getElementById('totalPages');
+            const totalCostElement = document.getElementById('totalCost');
+            const hiddenTotalPrice = document.getElementById('hidden_total_price');
+            
+            let books = [];
+            
+            // Add the first book row by default
+            addBookRow();
+            
+            // Event listener for adding a new book
+            addBookBtn.addEventListener('click', addBookRow);
+            
+            // Function to add a new book row
+            function addBookRow() {
+                const bookId = Date.now() + Math.random(); // Unique ID
+                const bookNumber = books.length + 1;
+                
+                const row = document.createElement('tr');
+                row.id = `book-${bookId}`;
+                row.innerHTML = `
+                    <td class="book-number">Book ${bookNumber}</td>
+                    <td>
+                        <input type="text" id="title-${bookId}" placeholder="Enter book title" value="">
+                    </td>
+                    <td>
+                        <input type="number" min="1" id="pages-${bookId}" placeholder="Enter pages" value="">
+                    </td>
+                    <td>
+                        <select id="method-${bookId}">
+                            <option value="non-destructive">Non-Destructive</option>
+                            <option value="destructive">Destructive</option>
+                        </select>
+                    </td>
+                    <td class="cost-cell" id="cost-${bookId}">$0.00</td>
+                    <td>
+                        <button type="button" class="delete-btn" data-id="${bookId}">Delete</button>
+                    </td>
+                `;
+                
+                booksTableBody.appendChild(row);
+                
+                // Add event listeners for inputs
+                const titleInput = document.getElementById(`title-${bookId}`);
+                const pageInput = document.getElementById(`pages-${bookId}`);
+                const methodSelect = document.getElementById(`method-${bookId}`);
+                
+                titleInput.addEventListener('input', function() {
+                    updateBook(bookId);
+                });
+                
+                pageInput.addEventListener('input', function() {
+                    updateBook(bookId);
+                    updateSummary();
+                });
+                
+                methodSelect.addEventListener('change', function() {
+                    updateBook(bookId);
+                });
+                
+                // Add event listener for delete button
+                const deleteBtn = row.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteBook(bookId);
+                });
+                
+                // Initialize book in the array
+                books.push({
+                    id: bookId,
+                    number: bookNumber,
+                    title: '', // Empty title by default
+                    pages: 0,
+                    method: 'non-destructive',
+                    cost: 0
+                });
+                
+                updateSummary();
+            }
+            
+            // Function to calculate cost based on page count
+            function calculateCost(pages) {
+                if (pages <= 0) return 0;
+                
+                let cost;
+                
+                if (pages <= 200) {
+                    cost = pages * 0.25;
+                    cost = Math.min(cost, 50); // Cap at $50
+                } else if (pages <= 1000) {
+                    cost = pages * 0.30;
+                    cost = Math.min(cost, 200); // Cap at $200
+                } else {
+                    cost = pages * 0.40;
+                    cost = Math.min(cost, 600); // Cap at $600
+                }
+                
+                return cost;
+            }
+            
+            // Function to update a specific book
+            function updateBook(bookId) {
+                const titleInput = document.getElementById(`title-${bookId}`);
+                const pageInput = document.getElementById(`pages-${bookId}`);
+                const methodSelect = document.getElementById(`method-${bookId}`);
+                const costElement = document.getElementById(`cost-${bookId}`);
+                
+                const bookIndex = books.findIndex(book => book.id === bookId);
+                const bookNumber = bookIndex !== -1 ? bookIndex + 1 : 1;
+                
+                const title = titleInput.value;
+                const pages = parseInt(pageInput.value) || 0;
+                const method = methodSelect.value;
+                const cost = calculateCost(pages);
+                
+                // Update the book in the array
+                if (bookIndex !== -1) {
+                    books[bookIndex].title = title;
+                    books[bookIndex].pages = pages;
+                    books[bookIndex].method = method;
+                    books[bookIndex].cost = cost;
+                }
+                
+                costElement.textContent = `$${cost.toFixed(2)}`;
+            }
+            
+            // Function to delete a book
+            function deleteBook(bookId) {
+                // Remove from array
+                books = books.filter(book => book.id !== bookId);
+                
+                // Re-render the entire table with correct numbering but preserve custom titles
+                renderBooksTable();
+                
+                updateSummary();
+                
+                // If no books left, add one
+                if (books.length === 0) {
+                    addBookRow();
+                }
+            }
+            
+            // Function to render the books table with correct numbering
+            function renderBooksTable() {
+                // Clear the table
+                booksTableBody.innerHTML = '';
+                
+                // Re-add all books with correct numbering but preserve custom titles
+                books.forEach((book, index) => {
+                    const bookNumber = index + 1;
+                    const row = document.createElement('tr');
+                    row.id = `book-${book.id}`;
+                    row.innerHTML = `
+                        <td class="book-number">Book ${bookNumber}</td>
+                        <td>
+                            <input type="text" id="title-${book.id}" placeholder="Enter book title" value="${book.title}">
+                        </td>
+                        <td>
+                            <input type="number" min="1" id="pages-${book.id}" placeholder="Enter pages" value="${book.pages || ''}">
+                        </td>
+                        <td>
+                            <select id="method-${book.id}">
+                                <option value="non-destructive" ${book.method === 'non-destructive' ? 'selected' : ''}>Non-Destructive</option>
+                                <option value="destructive" ${book.method === 'destructive' ? 'selected' : ''}>Destructive</option>
+                            </select>
+                        </td>
+                        <td class="cost-cell" id="cost-${book.id}">$${book.cost.toFixed(2)}</td>
+                        <td>
+                            <button type="button" class="delete-btn" data-id="${book.id}">Delete</button>
+                        </td>
+                    `;
+                    
+                    booksTableBody.appendChild(row);
+                    
+                    // Re-attach event listeners
+                    const titleInput = document.getElementById(`title-${book.id}`);
+                    const pageInput = document.getElementById(`pages-${book.id}`);
+                    const methodSelect = document.getElementById(`method-${book.id}`);
+                    const deleteBtn = row.querySelector('.delete-btn');
+                    
+                    titleInput.addEventListener('input', function() {
+                        updateBook(book.id);
+                    });
+                    
+                    pageInput.addEventListener('input', function() {
+                        updateBook(book.id);
+                        updateSummary();
+                    });
+                    
+                    methodSelect.addEventListener('change', function() {
+                        updateBook(book.id);
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        deleteBook(book.id);
+                    });
+                });
+            }
+            
+            // Function to update the summary section
+            function updateSummary() {
+                const totalBooks = books.length;
+                const totalPages = books.reduce((sum, book) => sum + book.pages, 0);
+                const totalCost = books.reduce((sum, book) => sum + book.cost, 0);
+                
+                bookCountElement.textContent = totalBooks;
+                totalPagesElement.textContent = totalPages;
+                totalCostElement.textContent = `$${totalCost.toFixed(2)}`;
+                hiddenTotalPrice.value = totalCost.toFixed(2);
+            }
+            
+            // FORM SUBMISSION HANDLER - COMPATIBLE WITH STRIPE
+            document.getElementById('orderForm').addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Get the total price from the calculator
+                const total = hiddenTotalPrice.value;
+                
+                // Store book data and form data in sessionStorage
+                const formData = new FormData(this);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+                
+                // Add book data to the form object
+                formObject.books = books;
+                
+                sessionStorage.setItem('orderData', JSON.stringify(formObject));
+                sessionStorage.setItem('orderTotal', total);
+                
+                // Redirect to checkout page with the total price as a URL parameter
+                window.location.href = 'checkout_page.html?total=' + encodeURIComponent(total);
+            });
+        });
+    </script>
+        <h1>Complete Purchase</h1>
+    
+    <div id="order-summary">
+        <h3>Order Total: <span id="display-total">$0.00</span></h3>
+    </div>
+    
+    <button id="pay-button">Pay Now</button>
+</body>
+</html>

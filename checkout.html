@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/checkout_page.css"/>
+    <!-- Load Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <!-- Order Info Layout (unchanged) -->
+    <nav class="header-bar"><div class="header-bar_container"></div></nav>
+
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="checkout-container">
+            <div class="order_info_container">
+                <h1 class="os_title">Order Summary</h1>
+
+                <div class="checkout-section">
+                    <h2>Customer Information</h2>
+                    <div class="checkout-row"><span class="checkout-label">Name:</span><span class="checkout-value" id="customer-name"></span></div>
+                    <div class="checkout-row"><span class="checkout-label">Email:</span><span class="checkout-value" id="customer-email"></span></div>
+                    <div class="checkout-row"><span class="checkout-label">Phone:</span><span class="checkout-value" id="customer-phone"></span></div>
+                </div>
+
+                <div class="checkout-section">
+                    <h2>Document Preferences</h2>
+                    <div class="checkout-row"><span class="checkout-label">File Type(s):</span><div class="file-types-list" id="file-types"></div></div>
+                    <div class="checkout-row"><span class="checkout-label">Delivery Method:</span><span class="checkout-value" id="delivery-method"></span></div>
+                </div>
+
+                <div class="checkout-section"><h2>Additional Notes</h2><p id="order-notes"></p></div>
+
+                <div class="total-section">
+                    <div class="checkout-row"><span class="checkout-label">Total:</span><span class="checkout-value" id="order-total"></span></div>
+                </div>
+            </div>
+
+            <div class="checkout-container card_info_container">
+                <h1 class="pd_title">Payment Details</h1>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <div id="card-number" class="StripeElement"></div>
+                    </div>
+
+                    <div class="card-row">
+                        <div class="card-col">
+                            <label for="card-expiry">Expiry Date</label>
+                            <div id="card-expiry" class="StripeElement"></div>
+                        </div>
+                        <div class="card-col">
+                            <label for="card-cvc">CVC</label>
+                            <div id="card-cvc" class="StripeElement"></div>
+                        </div>
+                    </div>
+
+                    <div id="card-errors" role="alert"></div>
+                    <button id="submit-button" class="stripe-button">Pay Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"><div class="footer-bar"></div></div>
+
+    <script>
+        const orderData = JSON.parse(sessionStorage.getItem('orderData'));
+
+        // Display order data
+        if (orderData) {
+            document.getElementById('customer-name').textContent = orderData.name || 'N/A';
+            document.getElementById('customer-email').textContent = orderData.email || 'N/A';
+            document.getElementById('customer-phone').textContent = orderData.phone || 'N/A';
+
+            const fileTypesContainer = document.getElementById('file-types');
+            if (orderData.documtnt_type) {
+                const fileTypes = Array.isArray(orderData.documtnt_type)
+                    ? orderData.documtnt_type
+                    : [orderData.documtnt_type];
+
+                fileTypes.forEach(type => {
+                    if (type) {
+                        const tag = document.createElement('span');
+                        tag.className = 'file-type-tag';
+                        tag.textContent = type;
+                        fileTypesContainer.appendChild(tag);
+                    }
+                });
+            } else {
+                fileTypesContainer.textContent = 'None selected';
+            }
+
+            document.getElementById('delivery-method').textContent = orderData.delivery_method || 'Not selected';
+            document.getElementById('order-notes').textContent = orderData.order_details || 'None';
+            // Get total from orderData instead of URL
+            document.getElementById('order-total').textContent = orderData.calculatedTotal ? '$' + orderData.calculatedTotal : '$0';
+        } else {
+            document.getElementById('customer-name').textContent = 'No order data found';
+        }
+
+        const stripe = Stripe('pk_test_51RBK5OKX1QJsog5pVV0eGRimK012jA72alzIS52nYzCnT9gX9Tt8IZRCNvFZoMWDwXSPmIL0e9Z9z34rN6s2qhUm00SUoS30ET');
+        const elements = stripe.elements();
+
+        const elementStyles = {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': { color: '#aab7c4' }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        const cardNumber = elements.create('cardNumber', { style: elementStyles });
+        const cardExpiry = elements.create('cardExpiry', { style: elementStyles });
+        const cardCvc = elements.create('cardCvc', { style: elementStyles });
+
+        cardNumber.mount('#card-number');
+        cardExpiry.mount('#card-expiry');
+        cardCvc.mount('#card-cvc');
+
+        cardNumber.addEventListener('change', (event) => {
+            const displayError = document.getElementById('card-errors');
+            displayError.textContent = event.error ? event.error.message : '';
+        });
+
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+
+            // Get amount from orderData instead of URL
+            const amount = parseFloat(orderData.calculatedTotal || '0') * 100; // Convert to cents for Stripe
+
+            try {
+                const response = await fetch('http://localhost:4242/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: amount,
+                        currency: 'cad',
+                        customerEmail: document.getElementById('customer-email').textContent,
+                        orderData: orderData
+                    })
+                });
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const { clientSecret } = await response.json();
+
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardNumber,
+                        billing_details: {
+                            name: document.getElementById('customer-name').textContent,
+                            email: document.getElementById('customer-email').textContent,
+                            phone: document.getElementById('customer-phone').textContent
+                        }
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('card-errors').textContent = error.message;
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Pay Now';
+                    return;
+                }
+
+                if (paymentIntent.status === 'succeeded') {
+                    window.location.href = `/success.html?payment_id=${paymentIntent.id}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('card-errors').textContent = error.message || 'Unexpected error';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Pay Now';
+            }
+        });
+    </script>
+</body>
+</html>

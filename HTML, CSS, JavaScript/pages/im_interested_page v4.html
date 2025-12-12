@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut Icon" type="x-icon" href="HTML, CSS, JavaScript/images/SiteTabLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lowest Price & The Highest Quality - Books2Digital</title>
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-blue: rgb(0, 47, 135);
+            --accent-blue: #6495ed;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER STYLES ===== */
+        .site_header {
+            background: rgb(0, 47, 135);
+            height: 100px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site_logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: whitesmoke;
+            background-image: linear-gradient(to top, rgb(160, 158, 158), rgb(255, 255, 255) 30%);
+            background-size: 100%;
+            -webkit-background-clip: text;
+            -moz-backface-visibility: text;
+            -webkit-text-fill-color: transparent;
+            -moz-text-fill-color: transparent;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .header-bar {
+            height: 40px;
+            background-color: #000000d6;
+            width: 100%;
+        }
+
+        .header-bar_container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            max-width: 100px;
+            margin: 0 auto;
+        }
+
+        .navigation-bar_container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 10px 0;
+        }
+
+        .navigation-bar_item {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .order_details_container {
+            width: 100%;
+        }
+
+        .orders_form {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin: 30px 0;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .Order_subtitle {
+            margin: 30px 0 20px 0;
+        }
+
+        .Order_subtitle h2 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+            margin: 20px 0;
+        }
+
+        /* ===== BOOK CALCULATOR STYLES ===== */
+        .pricing-info {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--accent-blue);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+        }
+
+        .pricing-info h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+
+        .pricing-tier {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #b8d4ff;
+        }
+
+        .pricing-tier:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .pricing-tier h3 {
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .calculator-container {
+            margin-bottom: 40px;
+        }
+
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .calculator-header h2 {
+            color: var(--primary-blue);
+            font-size: 1.6rem;
+        }
+
+        .add-book-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .add-book-btn:hover {
+            background-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        th {
+            background-color: #f5f8ff;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        tr:hover {
+            background-color: #f9fbff;
+        }
+
+        .book-number {
+            font-weight: 600;
+            color: var(--primary-blue);
+            width: 80px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.2);
+        }
+
+        .cost-cell {
+            font-weight: 600;
+            color: var(--primary-blue);
+            width: 100px;
+        }
+
+        .delete-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff5252;
+            transform: scale(1.05);
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #f0f7ff, #e3eeff);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 25px;
+            border: 1px solid #d4e3ff;
+        }
+
+        .summary h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #b8d4ff;
+            font-size: 1.1rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .total-row {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--accent-blue);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .order_inputs, .dropdown, .order_details_message {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .order_inputs:focus, .dropdown:focus, .order_details_message:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.2);
+        }
+
+        .order_details_message {
+            height: 140px;
+            resize: vertical;
+        }
+
+        .file_type_container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .file_type_container input[type="checkbox"] {
+            display: none;
+        }
+
+        .file_type_container label {
+            cursor: pointer;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .file_type_container .icon {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s;
+            text-align: center;
+            background: white;
+        }
+
+        .file_type_container input[type="checkbox"]:checked + label .icon {
+            border-color: var(--primary-blue);
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .file_type_container .icon p {
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .next_button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            width: 100%;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+
+        .next_button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 47, 135, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--white);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-bar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        /* ===== RESPONSIVE STYLES ===== */
+        @media (max-width: 768px) {
+            .main {
+                padding: 10px;
+            }
+            
+            .orders_form {
+                padding: 25px;
+            }
+            
+            table {
+                font-size: 14px;
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+            
+            .calculator-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .file_type_container {
+                gap: 10px;
+            }
+            
+            .file_type_container label {
+                min-width: 100px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .Order_subtitle h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .orders_form {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                font-size: 13px;
+            }
+            
+            .file_type_container label {
+                min-width: 80px;
+            }
+            
+            .file_type_container .icon {
+                padding: 10px;
+            }
+            
+            .add-book-btn, .next_button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="header-bar">
+        <div class="header-bar_container">
+            <!-- Navigation items can be added here -->
+        </div>
+    </nav>
+   
+
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="main">
+        <div class="order_details_container">
+            <form id="orderForm" class="orders_form">
+                <h1>Order Details</h1>
+                
+                <!-- BOOK CALCULATOR SECTION -->
+                <div class="Order_subtitle">
+                    <h2>Book Scanning Calculator</h2>
+                    <hr>
+                </div>
+
+                <div class="pricing-info">
+                    <h2>Our Pricing Structure</h2>
+                    <div class="pricing-tier">
+                        <h3>Books with 0 - 200 pages</h3>
+                        <p><strong>$0.25 per page</strong> (up to a max of $50 per book)</p>
+                    </div>
+                    <div class="pricing-tier">
+                        <h3>Books with 200 - 1000 pages</h3>
+                        <p><strong>$0.30 per page</strong> (up to a max of $200 per book)</p>
+                    </div>
+                    <div class="pricing-tier">
+                        <h3>Books with 1000+ pages</h3>
+                        <p><strong>$0.40 per page</strong> (up to a max of $600 per book)</p>
+                    </div>
+                </div>
+                
+                <div class="calculator-container">
+                    <div class="calculator-header">
+                        <h2>Enter Your Books</h2>
+                        <button type="button" class="add-book-btn" id="addBookBtn">
+                            <span>+</span> Add Another Book
+                        </button>
+                    </div>
+                    
+                    <table id="booksTable">
+                        <thead>
+                            <tr>
+                                <th class="book-number">Book</th>
+                                <th>Book Title</th>
+                                <th># of Pages</th>
+                                <th>Scanning Method</th>
+                                <th class="cost-cell">Cost</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody">
+                            <!-- Rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="summary" id="summarySection">
+                        <h2>Cost Summary</h2>
+                        <div class="summary-row">
+                            <span>Number of Books:</span>
+                            <span id="bookCount">0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total Pages:</span>
+                            <span id="totalPages">0</span>
+                        </div>
+                        <div class="summary-row total-row">
+                            <span>Total Cost:</span>
+                            <span id="totalCost">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="access_key" value="0ad67312-7de7-4939-95d0-5027ba0e77a4">
+                <input type="hidden" id="hidden_total_price" name="total_price" value="0">
+
+                <div class="Order_subtitle">
+                    <h2>Personal Details</h2>
+                    <hr>
+                </div>
+                <input type="text" name="name" placeholder="Your Name" class="order_inputs" required>
+                <input type="email" name="email" placeholder="Your Email" class="order_inputs" required>
+                <input type="text" name="phone" placeholder="Phone (Optional)" class="order_inputs">
+
+                <div class="Order_subtitle">
+                    <h2>Document Preferences</h2>
+                    <hr>
+                </div>
+
+                <h3>File Type(s)</h3>
+                <div class="file_type_container">
+                    <input type="checkbox" name="document_type" value="PDF" id="pdf_box">
+                    <label for="pdf_box">
+                        <div class="icon">
+                            <p>PDF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="document_type" value="PDF/A" id="pdf/a_box">
+                    <label for="pdf/a_box">
+                        <div class="icon">
+                            <p>PDF/A</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="document_type" value="JPEG" id="jpeg_box">
+                    <label for="jpeg_box">
+                        <div class="icon">
+                            <p>JPEG</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="document_type" value="TIFF" id="tiff_box">
+                    <label for="tiff_box">
+                        <div class="icon">
+                            <p>TIFF</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="document_type" value="PNM" id="pnm_box">
+                    <label for="pnm_box">
+                        <div class="icon">
+                            <p>PNM</p>
+                        </div>
+                    </label>
+                    <input type="checkbox" name="document_type" value="Multipage PDF" id="multipdf_box">
+                    <label for="multipdf_box">
+                        <div class="icon">
+                            <p>Multipage PDF</p>
+                        </div>
+                    </label>
+                </div>
+
+                <h3>Delivery Method</h3>
+                <select class="dropdown" name="delivery_method">
+                    <option value="Email">Email</option>
+                    <option value="USB">USB</option>
+                    <option value="Both">Both (Email + USB)</option>
+                </select>
+
+                <h3 style="margin-top: 20px;">Additional Order Details</h3>
+                <textarea name="order_details" placeholder="Any special instructions or additional details about your order..." class="order_details_message"></textarea>
+
+                <button type="submit" class="next_button">Proceed to Checkout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-bar">
+            <p>&copy; 2023 Books2Digital. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // BOOK CALCULATOR FUNCTIONALITY
+        document.addEventListener('DOMContentLoaded', function() {
+            const booksTableBody = document.getElementById('booksTableBody');
+            const addBookBtn = document.getElementById('addBookBtn');
+            const bookCountElement = document.getElementById('bookCount');
+            const totalPagesElement = document.getElementById('totalPages');
+            const totalCostElement = document.getElementById('totalCost');
+            const hiddenTotalPrice = document.getElementById('hidden_total_price');
+            
+            let books = [];
+            
+            // Add the first book row by default
+            addBookRow();
+            
+            // Event listener for adding a new book
+            addBookBtn.addEventListener('click', addBookRow);
+            
+            // Function to add a new book row
+            function addBookRow() {
+                const bookId = Date.now() + Math.random(); // Unique ID
+                const bookNumber = books.length + 1;
+                
+                const row = document.createElement('tr');
+                row.id = `book-${bookId}`;
+                row.innerHTML = `
+                    <td class="book-number">Book ${bookNumber}</td>
+                    <td>
+                        <input type="text" id="title-${bookId}" placeholder="Enter book title" value="">
+                    </td>
+                    <td>
+                        <input type="number" min="1" id="pages-${bookId}" placeholder="Enter pages" value="">
+                    </td>
+                    <td>
+                        <select id="method-${bookId}">
+                            <option value="non-destructive">Non-Destructive</option>
+                            <option value="destructive">Destructive</option>
+                        </select>
+                    </td>
+                    <td class="cost-cell" id="cost-${bookId}">$0.00</td>
+                    <td>
+                        <button type="button" class="delete-btn" data-id="${bookId}">Delete</button>
+                    </td>
+                `;
+                
+                booksTableBody.appendChild(row);
+                
+                // Add event listeners for inputs
+                const titleInput = document.getElementById(`title-${bookId}`);
+                const pageInput = document.getElementById(`pages-${bookId}`);
+                const methodSelect = document.getElementById(`method-${bookId}`);
+                
+                titleInput.addEventListener('input', function() {
+                    updateBook(bookId);
+                });
+                
+                pageInput.addEventListener('input', function() {
+                    updateBook(bookId);
+                    updateSummary();
+                });
+                
+                methodSelect.addEventListener('change', function() {
+                    updateBook(bookId);
+                });
+                
+                // Add event listener for delete button
+                const deleteBtn = row.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteBook(bookId);
+                });
+                
+                // Initialize book in the array
+                books.push({
+                    id: bookId,
+                    number: bookNumber,
+                    title: '', // Empty title by default
+                    pages: 0,
+                    method: 'non-destructive',
+                    cost: 0
+                });
+                
+                updateSummary();
+            }
+            
+            // Function to calculate cost based on page count
+            function calculateCost(pages) {
+                if (pages <= 0) return 0;
+                
+                let cost;
+                
+                if (pages <= 200) {
+                    cost = pages * 0.25;
+                    cost = Math.min(cost, 50); // Cap at $50
+                } else if (pages <= 1000) {
+                    cost = pages * 0.30;
+                    cost = Math.min(cost, 200); // Cap at $200
+                } else {
+                    cost = pages * 0.40;
+                    cost = Math.min(cost, 600); // Cap at $600
+                }
+                
+                return cost;
+            }
+            
+            // Function to update a specific book
+            function updateBook(bookId) {
+                const titleInput = document.getElementById(`title-${bookId}`);
+                const pageInput = document.getElementById(`pages-${bookId}`);
+                const methodSelect = document.getElementById(`method-${bookId}`);
+                const costElement = document.getElementById(`cost-${bookId}`);
+                
+                const bookIndex = books.findIndex(book => book.id === bookId);
+                const bookNumber = bookIndex !== -1 ? bookIndex + 1 : 1;
+                
+                const title = titleInput.value;
+                const pages = parseInt(pageInput.value) || 0;
+                const method = methodSelect.value;
+                const cost = calculateCost(pages);
+                
+                // Update the book in the array
+                if (bookIndex !== -1) {
+                    books[bookIndex].title = title;
+                    books[bookIndex].pages = pages;
+                    books[bookIndex].method = method;
+                    books[bookIndex].cost = cost;
+                }
+                
+                costElement.textContent = `$${cost.toFixed(2)}`;
+            }
+            
+            // Function to delete a book
+            function deleteBook(bookId) {
+                // Remove from array
+                books = books.filter(book => book.id !== bookId);
+                
+                // Re-render the entire table with correct numbering but preserve custom titles
+                renderBooksTable();
+                
+                updateSummary();
+                
+                // If no books left, add one
+                if (books.length === 0) {
+                    addBookRow();
+                }
+            }
+            
+            // Function to render the books table with correct numbering
+            function renderBooksTable() {
+                // Clear the table
+                booksTableBody.innerHTML = '';
+                
+                // Re-add all books with correct numbering but preserve custom titles
+                books.forEach((book, index) => {
+                    const bookNumber = index + 1;
+                    const row = document.createElement('tr');
+                    row.id = `book-${book.id}`;
+                    row.innerHTML = `
+                        <td class="book-number">Book ${bookNumber}</td>
+                        <td>
+                            <input type="text" id="title-${book.id}" placeholder="Enter book title" value="${book.title}">
+                        </td>
+                        <td>
+                            <input type="number" min="1" id="pages-${book.id}" placeholder="Enter pages" value="${book.pages || ''}">
+                        </td>
+                        <td>
+                            <select id="method-${book.id}">
+                                <option value="non-destructive" ${book.method === 'non-destructive' ? 'selected' : ''}>Non-Destructive</option>
+                                <option value="destructive" ${book.method === 'destructive' ? 'selected' : ''}>Destructive</option>
+                            </select>
+                        </td>
+                        <td class="cost-cell" id="cost-${book.id}">$${book.cost.toFixed(2)}</td>
+                        <td>
+                            <button type="button" class="delete-btn" data-id="${book.id}">Delete</button>
+                        </td>
+                    `;
+                    
+                    booksTableBody.appendChild(row);
+                    
+                    // Re-attach event listeners
+                    const titleInput = document.getElementById(`title-${book.id}`);
+                    const pageInput = document.getElementById(`pages-${book.id}`);
+                    const methodSelect = document.getElementById(`method-${book.id}`);
+                    const deleteBtn = row.querySelector('.delete-btn');
+                    
+                    titleInput.addEventListener('input', function() {
+                        updateBook(book.id);
+                    });
+                    
+                    pageInput.addEventListener('input', function() {
+                        updateBook(book.id);
+                        updateSummary();
+                    });
+                    
+                    methodSelect.addEventListener('change', function() {
+                        updateBook(book.id);
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        deleteBook(book.id);
+                    });
+                });
+            }
+            
+            // Function to update the summary section
+            function updateSummary() {
+                const totalBooks = books.length;
+                const totalPages = books.reduce((sum, book) => sum + book.pages, 0);
+                const totalCost = books.reduce((sum, book) => sum + book.cost, 0);
+                
+                bookCountElement.textContent = totalBooks;
+                totalPagesElement.textContent = totalPages;
+                totalCostElement.textContent = `$${totalCost.toFixed(2)}`;
+                hiddenTotalPrice.value = totalCost.toFixed(2);
+            }
+            
+            // FORM SUBMISSION HANDLER - COMPATIBLE WITH STRIPE
+            document.getElementById('orderForm').addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Get the total price from the calculator
+                const total = hiddenTotalPrice.value;
+                
+                // Store book data and form data in sessionStorage
+                const formData = new FormData(this);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+                
+                // Add book data to the form object
+                formObject.books = books;
+                
+                sessionStorage.setItem('orderData', JSON.stringify(formObject));
+                sessionStorage.setItem('orderTotal', total);
+                
+                // Redirect to checkout page with the total price as a URL parameter
+                window.location.href = 'checkout_page.html?total=' + encodeURIComponent(total);
+            });
+        });
+    </script>
+</body>
+</html>

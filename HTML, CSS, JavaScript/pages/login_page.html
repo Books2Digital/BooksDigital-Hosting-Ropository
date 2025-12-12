@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lowest Price & The Highest Quality - Books2Digital</title>
+    <link rel="stylesheet" href="/HTML, CSS, JavaScript/css/login_page.css"/>
+    <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+</head>
+
+
+<body>
+   
+
+
+    <div class="site_header">
+        <div class="site_logo">
+            <a href="/HTML, CSS, JavaScript/pages/home.html">Books2Digital</a>
+        </div>
+        
+        <nav class="navigation-bar">
+            <div class="navigation-bar_container">
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+                <a href="/" class="navigation-bar_item"></a>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="main">
+        <div class="login_container">
+            <form id="loginForm">
+                <div class="login_title">
+                    <h2>Log In</h2>
+                    <hr>
+                </div>
+                
+                <input class="login_input" name="email" placeholder="Email" required>
+                <input class="login_input" type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <a href="/HTML, CSS, JavaScript/pages/signup_page.html">No account? Sign up</a>
+            <div id="loginMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                email: this.elements.email.value,
+                password: this.elements.password.value
+            };
+
+            const loginBtn = this.querySelector('button[type="submit"]');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch('http://localhost:4242/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData),
+                    credentials: 'include' // Essential for cookies
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = result.redirectUrl || '/HTML,%20CSS,%20JavaScript/pages/profile_page.html';
+                } else {
+                    document.getElementById('loginMessage').textContent = result.error || 'Login failed';
+                    document.getElementById('loginMessage').style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('loginMessage').textContent = 'Network error - try again';
+                document.getElementById('loginMessage').style.color = 'red';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        });
+    </script>
+</body>
+</html>

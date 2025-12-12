@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Books2Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .body{
+            max-width: 100%;
+            height: 100%;
+            z-index: 0;
+            margin: 0;
+            background-color: 	rgba(0, 47, 135, 0.104);
+            color: rgb(0, 47, 135);
+            font-weight: 0;
+        }
+
+        /* ===== HEADER STYLES ===== */
+
+
+
+
+        .site_header{
+            background: rgb(0, 47, 135);
+            height: 100px;
+            z-index: 999;
+        }
+
+        .site_logo{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: rgb(245, 245, 245);
+            background-image: linear-gradient(to top, rgb(160, 158, 158), rgb(255, 255, 255) 30%);
+            background-size: 100%;
+            -webkit-background-clip: text;
+            -moz-backface-visibility: text;
+            -webkit-text-fill-color: transparent;
+            -moz-text-fill-color: transparent;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 2rem;
+            border-radius: 0px;
+            padding-top: 2%;
+            position: static;
+        }
+
+        .header-bar{
+            height: 40px;
+            position: sticky;
+            background-color: #000000d6;
+            text-decoration: none;
+            font-size: 2rem;
+            width: 100%;
+        }
+
+        .header-bar_container{
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+            z-index: 1;
+            max-width: 100px;
+            margin: 0 auto;
+            padding: 0 0px;
+        }
+
+        .header-bar_item{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: px;
+            color: #ffffff;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+            border-radius: 4px;
+            padding-top: 44px;
+            padding: 0 6px;
+            font-size: 17px;
+            transition: background-color 10s ease;
+            margin-left: 0%;
+        }
+
+        .header-bar_item:hover{
+            color: rgb(100,149,237);
+            transition: color 0.5s, box-shadow 0.3s;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            flex: 1;
+            padding: 140px 20px 180px; /* Space for fixed header and footer */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ===== BOOK COMPONENT STYLES ===== */
+        .book-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            height: 650px;
+            background: #f5e8c8;
+            border-radius: 10px;
+            box-shadow: 
+                0 0 0 10px #d4b87a,
+                0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            margin-top: -50px;
+        }
+
+        /* Book spine effect */
+        .book-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.1) 0%, 
+                rgba(0,0,0,0.2) 50%, 
+                rgba(0,0,0,0.1) 100%);
+            z-index: 2;
+        }
+
+        /* Left page (order summary) */
+        .page-left {
+            flex: 1;
+            padding: 30px;
+            background: #f5e8c8;
+            position: relative;
+            overflow-y: auto;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Right page (payment details) */
+        .page-right {
+            flex: 1;
+            padding: 30px;
+            background: #f5e8c8;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Page curl effect */
+        .page-left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to left, 
+                rgba(0,0,0,0.1) 0%, 
+                transparent 100%);
+        }
+
+        .page-right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.1) 0%, 
+                transparent 100%);
+        }
+
+        /* ===== ORDER SUMMARY STYLES ===== */
+        .os_title {
+            color: rgb(0, 47, 135);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .checkout-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .checkout-section h2 {
+            color: rgb(0, 47, 135);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkout-section h2 i {
+            color: rgb(0, 100, 255);
+        }
+
+        .checkout-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+
+        .checkout-label {
+            font-weight: 600;
+            color: #555;
+            flex: 1;
+        }
+
+        .checkout-value {
+            flex: 1;
+            text-align: right;
+            color: #333;
+        }
+
+        .file-types-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .file-tag {
+            background: #e6f0ff;
+            color: rgb(0, 47, 135);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        #order-notes {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #6c757d;
+            min-height: 60px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .total-section {
+            background: rgba(255,255,255,0.7);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid rgb(0, 47, 135);
+        }
+
+        .total-section .checkout-row {
+            margin-bottom: 0;
+            font-size: 1.3rem;
+        }
+
+        .total-section .checkout-label {
+            font-size: 1.3rem;
+            color: rgb(0, 47, 135);
+        }
+
+        .total-section .checkout-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgb(0, 47, 135);
+        }
+
+        /* ===== PAYMENT FORM STYLES ===== */
+        .pd_title {
+            color: rgb(0, 47, 135);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Stripe Element Styling */
+        .StripeElement {
+            padding: 12px 15px;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.7);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            min-height: 44px;
+        }
+
+        .StripeElement--focus {
+            border-color: rgb(0, 100, 255);
+            box-shadow: 0 0 0 2px rgba(0, 100, 255, 0.2);
+        }
+
+        .StripeElement--invalid {
+            border-color: #dc3545;
+        }
+
+        .StripeElement--complete {
+            border-color: #28a745;
+        }
+
+        #card-errors {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            min-height: 20px;
+            padding: 8px 12px;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+
+        #card-errors.show {
+            display: block;
+        }
+
+        .stripe-button {
+            background: linear-gradient(135deg, rgb(0, 47, 135), rgb(0, 100, 255));
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stripe-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 47, 135, 0.3);
+        }
+
+        .stripe-button:active {
+            transform: translateY(0);
+        }
+
+        .stripe-button:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* ===== FOOTER STYLES ===== */
+        .footer {
+            background: rgb(0, 47, 135);
+            height: 150px;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            color: white;
+        }
+
+        .footer-bar {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: rgb(100,149,237);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        /* ===== RESPONSIVE STYLES ===== */
+        @media (max-width: 968px) {
+            .book-container {
+                flex-direction: column;
+                height: auto;
+                max-height: none;
+            }
+            
+            .page-left, .page-right {
+                border-right: none;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                min-height: 400px;
+            }
+            
+            .main {
+                padding: 140px 20px 200px;
+            }
+            
+            .site_logo {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkout-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .checkout-value {
+                text-align: left;
+            }
+            
+            .file-types-list {
+                justify-content: flex-start;
+            }
+            
+            .book-container {
+                box-shadow: 
+                    0 0 0 5px #d4b87a,
+                    0 10px 20px rgba(0, 0, 0, 0.2);
+            }
+            
+            .navigation-bar_container {
+                gap: 15px;
+                padding: 0 10px;
+            }
+            
+            .navigation-bar_item {
+                padding: 8px 10px;
+                font-size: 15px;
+            }
+            
+            .footer {
+                height: 120px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation Bar -->
+    <nav class="header-bar">
+        <div class="header-bar_container">
+            <div class="navigation-bar">
+                <!--<div class="navigation-bar_container">
+                    <a href="#" class="navigation-bar_item">Home</a>
+                    <a href="#" class="navigation-bar_item">Services</a>
+                    <a href="#" class="navigation-bar_item">Pricing</a>
+                    <a href="#" class="navigation-bar_item">Contact</a>
+                </div>-->
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Header with Logo -->
+    <header class="site_header">
+        <a href="/HTML, CSS, JavaScript/pages/home.html" class="site_logo">Books2Digital</a>
+    </header>
+
+    <!-- Main Content with Book -->
+    <main class="main">
+        <div class="book-container">
+            <div class="page-left">
+                <h1 class="os_title">
+                    <i class="fas fa-receipt"></i>Order Summary
+                </h1>
+                
+                <div class="checkout-section">
+                    <h2><i class="fas fa-user"></i>Customer Information</h2>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Name:</span>
+                        <span class="checkout-value" id="customer-name">Loading...</span>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Email:</span>
+                        <span class="checkout-value" id="customer-email">Loading...</span>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Phone:</span>
+                        <span class="checkout-value" id="customer-phone">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2><i class="fas fa-file-alt"></i>Document Preferences</h2>
+                    <div class="checkout-row">
+                        <span class="checkout-label">File Type(s):</span>
+                        <div class="file-types-list" id="file-types">
+                            <span class="file-tag">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="checkout-row">
+                        <span class="checkout-label">Delivery Method:</span>
+                        <span class="checkout-value" id="delivery-method">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="checkout-section">
+                    <h2><i class="fas fa-sticky-note"></i>Additional Notes</h2>
+                    <p id="order-notes">Loading...</p>
+                </div>
+                
+                <div class="total-section">
+                    <div class="checkout-row">
+                        <span class="checkout-label">Total:</span>
+                        <span class="checkout-value" id="order-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-right">
+                <h1 class="pd_title">
+                    <i class="fas fa-credit-card"></i>Payment Details
+                </h1>
+                
+                <!-- Stripe Payment Form (Multi-Line Layout) -->
+                <form id="payment-form">
+                    <!-- Card Number -->
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <div id="card-number" class="StripeElement"></div>
+                    </div>
+                    
+                    <!-- Expiry & CVC -->
+                    <div class="card-row">
+                        <div class="card-col">
+                            <label for="card-expiry">Expiry Date</label>
+                            <div id="card-expiry" class="StripeElement"></div>
+                        </div>
+                        <div class="card-col">
+                            <label for="card-cvc">CVC</label>
+                            <div id="card-cvc" class="StripeElement"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="card-errors" role="alert"></div>
+                    <button id="submit-button" class="stripe-button">
+                        <i class="fas fa-lock"></i><span id="pay-button-text">Pay $0.00 Now</span>
+                    </button>
+                    
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure payment encrypted with SSL</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bar">
+            <div class="footer-content">
+                <p>Books2Digital - Professional Book Scanning Services</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">FAQ</a>
+                </div>
+                <p class="copyright">&copy; 2024 Books2Digital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced Data Persistence and Stripe Integration
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== DATA PERSISTENCE SECTION =====
+            // Retrieve order data from sessionStorage
+            const orderData = JSON.parse(sessionStorage.getItem('orderData'));
+            const urlParams = new URLSearchParams(window.location.search);
+            const totalPrice = urlParams.get('total');
+            
+            // Function to safely update element text
+            function updateElement(id, text) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = text || 'Not specified';
+                }
+            }
+            
+            // Function to display file types
+            function displayFileTypes(containerId, fileTypes) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (fileTypes && fileTypes.length > 0) {
+                    const types = Array.isArray(fileTypes) ? fileTypes : [fileTypes];
+                    
+                    types.forEach(type => {
+                        if (type && type.trim() !== '') {
+                            const tag = document.createElement('span');
+                            tag.className = 'file-tag';
+                            tag.textContent = type;
+                            container.appendChild(tag);
+                        }
+                    });
+                    
+                    if (container.children.length === 0) {
+                        container.textContent = 'None selected';
+                    }
+                } else {
+                    container.textContent = 'None selected';
+                }
+            }
+            
+            // Display the data on the page
+            if (orderData) {
+                updateElement('customer-name', orderData.name);
+                updateElement('customer-email', orderData.email);
+                updateElement('customer-phone', orderData.phone);
+                updateElement('delivery-method', orderData.delivery_method);
+                updateElement('order-notes', orderData.order_details || orderData.notes);
+                
+                // Handle file types
+                displayFileTypes('file-types', orderData.document_type || orderData.file_type);
+                
+                // Update total
+                const displayTotal = totalPrice ? '$' + parseFloat(totalPrice).toFixed(2) : (orderData.total ? '$' + parseFloat(orderData.total).toFixed(2) : '$0.00');
+                updateElement('order-total', displayTotal);
+                
+                // Update payment button text
+                const payButtonText = document.getElementById('pay-button-text');
+                if (payButtonText) {
+                    payButtonText.textContent = `Pay ${displayTotal} Now`;
+                }
+            } else {
+                // No order data found - show message
+                updateElement('customer-name', 'No order data found. Please start over.');
+                updateElement('customer-email', 'N/A');
+                updateElement('customer-phone', 'N/A');
+                updateElement('delivery-method', 'N/A');
+                updateElement('order-notes', 'No order details available');
+                updateElement('order-total', '$0.00');
+                
+                document.getElementById('file-types').innerHTML = '<span class="file-tag">N/A</span>';
+                
+                // Disable payment form if no data
+                document.getElementById('submit-button').disabled = true;
+                document.getElementById('submit-button').textContent = 'No Order Data';
+            }
+            
+            // ===== STRIPE PAYMENTS SECTION =====
+            // Initialize Stripe with your publishable key
+            // Replace with your actual publishable key from Stripe Dashboard
+            const stripe = Stripe('pk_test_51RBK5eQPVgtXZQkj1jvvNdHiEw4bYw4uN8eFSt3hBcSXce8FK0VGJLcqo6yZWhcQzLFykjooDRolrpGg4VVq0CUo00HLU8BiLa');
+            const elements = stripe.elements();
+            
+            // Customize Stripe Elements styles to match your theme
+            const elementStyles = {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+                    '::placeholder': {
+                        color: '#aab7c4'
+                    }
+                },
+                invalid: {
+                    color: '#dc3545',
+                    iconColor: '#dc3545'
+                }
+            };
+            
+            // Create Stripe card elements
+            const cardNumber = elements.create('cardNumber', {
+                style: elementStyles,
+                placeholder: '4242 4242 4242 4242',
+                showIcon: true
+            });
+            cardNumber.mount('#card-number');
+            
+            const cardExpiry = elements.create('cardExpiry', {
+                style: elementStyles,
+                placeholder: 'MM/YY'
+            });
+            cardExpiry.mount('#card-expiry');
+            
+            const cardCvc = elements.create('cardCvc', {
+                style: elementStyles,
+                placeholder: '123'
+            });
+            cardCvc.mount('#card-cvc');
+            
+            // Handle real-time validation errors
+            const displayError = document.getElementById('card-errors');
+            
+            // Listen for changes on all card elements
+            [cardNumber, cardExpiry, cardCvc].forEach(element => {
+                element.addEventListener('change', (event) => {
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                        displayError.classList.add('show');
+                    } else {
+                        displayError.textContent = '';
+                        displayError.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Handle form submission
+            const form = document.getElementById('payment-form');
+            const submitButton = document.getElementById('submit-button');
+            
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                // Validate order data exists
+                if (!orderData) {
+                    displayError.textContent = 'No order data found. Please start your order over.';
+                    displayError.classList.add('show');
+                    return;
+                }
+                
+                // Disable form submission while processing
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                // Get the total amount and convert to cents
+                const amount = totalPrice ? parseFloat(totalPrice) * 100 : 
+                                 (orderData.total ? parseFloat(orderData.total) * 100 : 0);
+                
+                // Basic validation
+                if (amount <= 0) {
+                    displayError.textContent = 'Invalid order total. Please check your order.';
+                    displayError.classList.add('show');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-lock"></i><span id="pay-button-text">Pay Now</span>';
+                    return;
+                }
+                
+                try {
+                    // 1. Create PaymentIntent on your server
+                    // Replace '/create-payment-intent' with your actual backend endpoint
+                    const response = await fetch('/create-payment-intent', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            amount: Math.round(amount),
+                            currency: 'cad',
+                            customerEmail: document.getElementById('customer-email').textContent,
+                            customerName: document.getElementById('customer-name').textContent,
+                            orderData: orderData
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const paymentIntentData = await response.json();
+                    
+                    if (!paymentIntentData.clientSecret) {
+                        throw new Error('No client secret received from server');
+                    }
+                    
+                    // 2. Confirm the payment with Stripe
+                    const { error, paymentIntent } = await stripe.confirmCardPayment(
+                        paymentIntentData.clientSecret, 
+                        {
+                            payment_method: {
+                                card: cardNumber,
+                                billing_details: {
+                                    name: document.getElementById('customer-name').textContent,
+                                    email: document.getElementById('customer-email').textContent,
+                                    phone: document.getElementById('customer-phone').textContent
+                                }
+                            },
+                            return_url: window.location.origin + '/success.html' // Add your success page URL
+                        }
+                    );
+                    
+                    if (error) {
+                        // Show error to customer
+                        displayError.textContent = error.message;
+                        displayError.classList.add('show');
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = '<i class="fas fa-lock"></i><span id="pay-button-text">Pay Now</span>';
+                        return;
+                    }
+                    
+                    // 3. Payment succeeded - handle success
+                    if (paymentIntent.status === 'succeeded') {
+                        // Save payment confirmation data
+                        const paymentData = {
+                            paymentIntentId: paymentIntent.id,
+                            amount: paymentIntent.amount,
+                            status: paymentIntent.status,
+                            timestamp: new Date().toISOString(),
+                            orderData: orderData
+                        };
+                        
+                        // Store in sessionStorage for confirmation page
+                        sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+                        
+                        // Optionally send confirmation to your server
+                        try {
+                            await fetch('/payment-success', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(paymentData)
+                            });
+                        } catch (serverError) {
+                            console.warn('Could not send confirmation to server:', serverError);
+                            // Continue anyway - payment is successful
+                        }
+                        
+                        // Redirect to success page
+                        window.location.href = `/success.html?payment_id=${paymentIntent.id}&amount=${amount}&status=success`;
+                    }
+                } catch (error) {
+                    console.error('Payment Error:', error);
+                    displayError.textContent = error.message || 'An unexpected error occurred. Please try again.';
+                    displayError.classList.add('show');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-lock"></i><span id="pay-button-text">Pay Now</span>';
+                }
+            });
+            
+            // Test mode notification (remove in production)
+            console.log('Stripe integration loaded. Using test mode.');
+            console.log('Test card: 4242 4242 4242 4242');
+            console.log('Any future expiry date (e.g., 12/34)');
+            console.log('Any 3-digit CVC (e.g., 123)');
+        });
+    </script>
+</body>
+</html>

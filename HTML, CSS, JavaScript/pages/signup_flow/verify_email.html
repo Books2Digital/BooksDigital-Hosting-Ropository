@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Books2Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .verification-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .verification-title h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .verification-title hr {
+            width: 60px;
+            height: 3px;
+            background-color: rgb(0, 47, 135);
+            border: none;
+            margin: 0.5rem auto 1.5rem;
+        }
+
+        .verification-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .verification-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .timer {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: rgb(0, 47, 135);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0.5rem 0;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background-color: #95a5a6;
+        }
+
+        .secondary-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .message {
+            margin: 1rem 0;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .error {
+            color: #e74c3c;
+            background-color: #fadbd8;
+        }
+
+        .success {
+            color: #27ae60;
+            background-color: #d5f4e6;
+        }
+
+        .info {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container" id="verificationContainer">
+        <div class="verification-title">
+            <h2>Verify Your Email</h2>
+            <hr>
+        </div>
+        
+        <p>We've sent a 6-digit verification code to your email address.</p>
+        <p>Please enter it below to complete your registration.</p>
+        
+        <input type="text" 
+               class="verification-input" 
+               id="verificationCode" 
+               maxlength="6" 
+               placeholder="000000"
+               pattern="[0-9]{6}">
+        
+        <div class="timer" id="verificationTimer"></div>
+        
+        <button id="verifyBtn">Verify Email</button>
+        <button class="secondary-btn" id="resendBtn">Resend Code</button>
+        
+        <div class="message" id="message"></div>
+        
+        <p class="info">If you don't see the email, check your spam folder.</p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tempUserId = urlParams.get('uid');
+        
+        let verificationTimer;
+        const VERIFICATION_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+        let timeRemaining = VERIFICATION_TIMEOUT;
+
+        if (!tempUserId) {
+            showMessage('Invalid verification link. Please restart registration.', 'error');
+            document.getElementById('verificationContainer').innerHTML = `
+                <div class="verification-title">
+                    <h2>Invalid Link</h2>
+                    <hr>
+                </div>
+                <p>The verification link is invalid or has expired.</p>
+                <button onclick="window.location.href='/signup_page.html'">
+                    Return to Sign Up
+                </button>
+            `;
+        } else {
+            startTimer();
+        }
+
+        document.getElementById('verifyBtn').addEventListener('click', verifyCode);
+        document.getElementById('resendBtn').addEventListener('click', resendCode);
+        
+        // Auto-focus on input and auto-submit on 6 digits
+        document.getElementById('verificationCode').addEventListener('input', function(e) {
+            if (this.value.length === 6) {
+                verifyCode();
+            }
+        });
+
+        async function verifyCode() {
+            const code = document.getElementById('verificationCode').value;
+            
+            if (code.length !== 6 || !/^\d+$/.test(code)) {
+                showMessage('Please enter a valid 6-digit code', 'error');
+                return;
+            }
+
+            const verifyBtn = document.getElementById('verifyBtn');
+            verifyBtn.disabled = true;
+            verifyBtn.textContent = 'Verifying...';
+
+            try {
+                const response = await fetch('http://localhost:4242/api/signup/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tempUserId: tempUserId,
+                        verificationCode: code
+                    }),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    clearInterval(verificationTimer);
+                    showMessage('Email verified successfully! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = result.redirectUrl || '/profile_page.html';
+                    }, 1500);
+                } else {
+                    showMessage(result.error || 'Invalid verification code', 'error');
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                showMessage('Network error - please try again', 'error');
+            } finally {
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'Verify Email';
+            }
+        }
+
+        async function resendCode() {
+            const resendBtn = document.getElementById('resendBtn');
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('http://localhost:4242/api/signup/resend-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tempUserId: tempUserId })
+                });
+
+                if (response.ok) {
+                    // Reset timer
+                    clearInterval(verificationTimer);
+                    timeRemaining = VERIFICATION_TIMEOUT;
+                    startTimer();
+                    
+                    showMessage('New verification code sent!', 'success');
+                } else {
+                    showMessage('Failed to resend code. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Resend error:', error);
+                showMessage('Network error - please try again', 'error');
+            } finally {
+                resendBtn.disabled = false;
+                resendBtn.textContent = 'Resend Code';
+            }
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            
+            verificationTimer = setInterval(() => {
+                timeRemaining -= 1000;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(verificationTimer);
+                    document.getElementById('verificationTimer').textContent = 'Code expired!';
+                    document.getElementById('verifyBtn').disabled = true;
+                    document.getElementById('verificationCode').disabled = true;
+                    showMessage('Verification code has expired. Please restart registration.', 'error');
+                    return;
+                }
+                
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            document.getElementById('verificationTimer').textContent = 
+                `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
