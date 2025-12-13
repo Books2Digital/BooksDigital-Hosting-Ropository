@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Lowest Price & The Highest Quality - Books2Digital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
@@ -36,6 +36,7 @@
             color: var(--text-dark);
             background-color: var(--light-gray);
             margin: 0;
+            min-width: 1200px; /* Force minimum width to match desktop layout */
         }
 
         /* ===== HEADER STYLES ===== */
@@ -43,6 +44,7 @@
             background: rgb(0, 47, 135);
             height: 100px;
             width: 100%;
+            min-width: 1200px;
         }
 
         .login_container {
@@ -90,6 +92,7 @@
             font-size: 2rem;
             width: 100%;
             z-index: 10000;
+            min-width: 1200px;
         }
 
         .header-bar_container {
@@ -150,6 +153,7 @@
             color: #000;
             background-color: rgba(100, 148, 237, 0.111);
             height: 30px;
+            min-width: 1200px;
         }
 
         .hook_text {
@@ -162,6 +166,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+            width: 1200px; /* Fixed width */
         }
 
         .main_container {
@@ -513,7 +518,6 @@
         }
 
         .section_3_image {
-            height: 200ox;
             width: 300px;
             margin: 0 auto 2rem;
             border-radius: var(--border-radius);
@@ -528,6 +532,7 @@
             font-size: 1.5rem;
             margin-top: -8px;
             margin-left: 330px;
+            white-space: nowrap;
         }
 
         .section_3_text {
@@ -698,6 +703,7 @@
             color: var(--white);
             padding: 3rem 0 2rem;
             margin-top: 4rem;
+            min-width: 1200px;
         }
 
         .footer-bar {
@@ -708,6 +714,11 @@
         }
 
         /* ===== RESPONSIVE STYLES ===== */
+        /* REMOVED ALL RESPONSIVE STYLES - NO CHANGES TO LAYOUT ON MOBILE */
+        /* The site will appear exactly the same on all devices */
+        /* Users can pan/scroll horizontally on mobile to see full content */
+
+        /* Only keep slider responsive behavior */
         @media (max-width: 1024px) {
             .slide {
                 min-width: 50%;
@@ -757,90 +768,8 @@
                 height: 45px;
             }
             
-            body {
-                padding: 1rem;
-            }
-            
             .slide-image {
                 height: 200px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .section_1 {
-                grid-template-columns: 1fr;
-            }
-            
-            .pricing_options {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .pricing_option_2 {
-                transform: scale(1);
-            }
-            
-            .media_1 {
-                flex-direction: column;
-            }
-            
-            .image_1 {
-                width: 100%;
-                height: 300px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navigation-bar_container {
-                gap: 1.5rem;
-            }
-            
-            .hook_text {
-                font-size: 1.5rem;
-            }
-            
-            .section_3_contact_message {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .text_block_1_header_title {
-                font-size: 1.5rem;
-            }
-            
-            .text_block_1_price {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .header-bar_container, .main {
-                padding: 0 1rem;
-            }
-            
-            .hook_container {
-                padding: 3rem 1rem;
-            }
-            
-            .hook_text {
-                font-size: 1.3rem;
-            }
-            
-            .section_2, .section_3, .section_4 {
-                padding: 2rem 1rem;
-            }
-            
-            .site_logo a {
-                font-size: 2rem;
-            }
-            
-            .navigation-bar_container {
-                gap: 1rem;
-            }
-            
-            .navigation-bar_item {
-                font-size: 1rem;
-                padding: 0.4rem 0.8rem;
             }
         }
     </style>
@@ -1267,3 +1196,5 @@
                         initSlider();
                     });
                 </script>
+</body>
+</html>
