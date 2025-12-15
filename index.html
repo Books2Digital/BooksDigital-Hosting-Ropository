@@ -36,7 +36,6 @@
             color: var(--text-dark);
             background-color: var(--light-gray);
             margin: 0;
-            min-width: 1200px; /* Force minimum width to match desktop layout */
         }
 
         /* ===== HEADER STYLES ===== */
@@ -44,7 +43,6 @@
             background: rgb(0, 47, 135);
             height: 100px;
             width: 100%;
-            min-width: 1200px;
         }
 
         .login_container {
@@ -92,7 +90,6 @@
             font-size: 2rem;
             width: 100%;
             z-index: 10000;
-            min-width: 1200px;
         }
 
         .header-bar_container {
@@ -153,7 +150,7 @@
             color: #000;
             background-color: rgba(100, 148, 237, 0.111);
             height: 30px;
-            min-width: 1200px;
+            width: 100%;
         }
 
         .hook_text {
@@ -166,7 +163,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-            width: 1200px; /* Fixed width */
+            width: 1200px; /* Fixed width for non-compressible layout */
+            min-width: 1200px; /* Prevent compression */
         }
 
         .main_container {
@@ -532,7 +530,6 @@
             font-size: 1.5rem;
             margin-top: -8px;
             margin-left: 330px;
-            white-space: nowrap;
         }
 
         .section_3_text {
@@ -703,7 +700,6 @@
             color: var(--white);
             padding: 3rem 0 2rem;
             margin-top: 4rem;
-            min-width: 1200px;
         }
 
         .footer-bar {
@@ -714,10 +710,7 @@
         }
 
         /* ===== RESPONSIVE STYLES ===== */
-        /* REMOVED ALL RESPONSIVE STYLES - NO CHANGES TO LAYOUT ON MOBILE */
-        /* The site will appear exactly the same on all devices */
-        /* Users can pan/scroll horizontally on mobile to see full content */
-
+        /* REMOVED ALL RESPONSIVE STYLES EXCEPT FOR SLIDER */
         /* Only keep slider responsive behavior */
         @media (max-width: 1024px) {
             .slide {
@@ -740,10 +733,6 @@
             
             .slide-image {
                 height: 220px;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
             }
             
             .slider-control {
